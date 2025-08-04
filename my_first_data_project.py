@@ -69,27 +69,30 @@ df['time_slot'] = df['hour'].apply(categorize_time)
 # 시각화: 막대 그래프로 표현
 # 가설: 아메리카노가 가장 많이 팔릴 것이다.
 
-"""
-groupby를 하게 되면 DataFrameGroupBy 객체는 그룹화된 데이터를 직접 보여주지는 않고 그룹별로 특정 연산을 수행 할 수 있도록 준비된 객체가 된다.
-sort_value()는 말그대로 sort다 default option이 오름차순이다. ascending=Falase를 이용하면 내림차순이 가능하다.
-"""
+
+# groupby를 하게 되면 DataFrameGroupBy 객체는 그룹화된 데이터를 직접 보여주지는 않고 그룹별로 특정 연산을 수행 할 수 있도록 준비된 객체가 된다.
+# sort_value()는 말그대로 sort다 default option이 오름차순이다. ascending=Falase를 이용하면 내림차순이 가능하다.
 menu_sales = df.groupby('menu_item')['quantity'].sum().sort_values(ascending=False)
 
-
-"""
-figure()는 Matplotlib의 전체 그림 창을 나타낸다. 이 안에 하나 이상의 서브플롯(Axes)이 포함 될 수 있다.
-figure()는 제목, 전체크기등을 설정하는데 사용한다.
-figsize 매개변수를 사용하여 그림의 크기를 인치 단위로 지정할 수 있다.
-"""
+# figure()는 Matplotlib의 전체 그림 창을 나타낸다. 이 안에 하나 이상의 서브플롯(Axes)이 포함 될 수 있다.
+# figure()는 제목, 전체크기등을 설정하는데 사용한다.
+# figsize 매개변수를 사용하여 그림의 크기를 인치 단위로 지정할 수 있다.
 plt.figure(figsize=(10, 6))
 
+# barplot()는 범주형 변수와 수지형 변수의 관계를 나타낸다.
+# 각 범주에 대한 수치형 변수의 평균, 합계등의 통계적 추정치를 보여준다.
+# x축을 menu_sales(Series)의 인덱스로 설정하고, y축은 menu_sales(Series)의 value로 설정한다.
+# 그러면 menu_sales.index는 x축의 범주가 되고 menu_sales.values는 y축의 제목의 값이 된다.
+sns.barplot(x=menu_sales.index, y=menu_sales.values)
 
-# sns.barplot(x=menu_sales.index, y=menu_sales.values)
-# plt.title('메뉴별 총 판매 수량')
-# plt.xlabel('메뉴')
-# plt.ylabel('판매 수량')
-# plt.xticks(rotation=45)
-# plt.show()
+# title(), xlabel(), ylabel()을 이용하여 그래프의 타이틀과 x,y축의 제목를 표기
+plt.title('메뉴별 총 판매 수량')
+plt.xlabel('메뉴')
+plt.ylabel('판매 수량')
+
+# xticks()를 이용하여 rotation=45로 x축 라벨을 시계 반대 방향으로 45도 회전시킨다.
+plt.xticks(rotation=45)
+plt.show()
 
 
 # 3-2.요일별/시간대별 판매량은 어떻게 다른가?
