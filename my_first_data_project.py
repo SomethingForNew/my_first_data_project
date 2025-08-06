@@ -16,7 +16,7 @@ plt.rcParams['axes.unicode_minus'] =False
 df = pd.read_csv('sales_data.csv')
 
 # 상위 5개 row 확인
-print(df.head())
+# print(df.head())
 
 # 행, 열 크기 확인
 # print(df.shape)
@@ -33,14 +33,16 @@ print(df.head())
 
 
 # order_date의 dtype: 문자열 object를 -> datetime64로 변경
-# order_time이 dtype: 문자열 obejct를 -> datetime.tiem object 로 변경 -> 왜? 어떤 효율을 위해서인지 모르겠음
-df['order_date'] = pd.to_datetime(df['order_date'])
-df['order_time'] = pd.to_datetime(df['order_time']).dt.time
+# order_time이 dtype: 문자열 obejct를 -> datetime.time object 로 변경 -> 왜? 어떤 효율을 위해서인지 모르겠음
+df['order_date'] = pd.to_datetime(df['order_date'], format='%Y%m%d')
+df['order_time'] = pd.to_datetime(df['order_time'], format='%H%M').dt.time
 df['day_of_week'] = df['order_date'].dt.day_name() # 요일 이름 추출 후 day_of_week 이라는 Series 추가
+print(df.info())
+print(df.head())
 
-# Pandas의 apply()는 DataFrame이나 Series에 사용자 정의함수, 내장 함수, 람다 함수 를 적용할 때 사용한다.
-# 각 햏, 각 열 또는 각 요소에 복잡한 연산을 적용해야 할때 유용하게 활용된다.
-df['hour'] = df['order_time'].apply(lambda x: x.hour) # 시간 추출 후 hour 라는 Series를 추가
+# # Pandas의 apply()는 DataFrame이나 Series에 사용자 정의함수, 내장 함수, 람다 함수 를 적용할 때 사용한다.
+# # 각 햏, 각 열 또는 각 요소에 복잡한 연산을 적용해야 할때 유용하게 활용된다.
+# df['hour'] = df['order_time'].apply(lambda x: x.hour) # 시간 추출 후 hour 라는 Series를 추가
 
 # # 시간대를 분류하는 함수
 # def categorize_time(hour: int) -> str:
