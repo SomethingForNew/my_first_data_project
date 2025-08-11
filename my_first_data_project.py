@@ -1,3 +1,26 @@
+# This Python 3 environment comes with many helpful analytics libraries installed
+# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python
+# For example, here's several helpful packages to load
+
+# import numpy as np # linear algebra
+# import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+
+# Input data files are available in the read-only "../input/" directory
+# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+
+# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using "Save & Run All" 
+# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session
+
+
+
+############################################################################################################################################
+
+
 # 표준 라이브러리 임포트는 없다고 가정
 
 # 서드파티 라이브러리 임포트 (알파벳 순)
@@ -96,15 +119,13 @@ plt.figure(figsize = (10, 6))
 # 각 범주에 대한 수치형 변수의 평균, 합계등의 통계적 추정치를 보여준다.
 # x축을 menu_sales(Series)의 인덱스로 설정하고, y축은 menu_sales(Series)의 value로 설정한다.
 # 그러면 menu_sales.index는 x축의 범주가 되고 menu_sales.values는 y축의 제목의 값이 된다.
-# 이게 가장 바람직하고 전문적인 방식
+# groupby 후 barplot을 쓰는게 가장 바람직하고 전문적인 방식이라고 한다.
+# 데이터 처리와 시각화를 명확히 분리
 sns.barplot(x = menu_sales.index, y = menu_sales.values) 
 
 # groupby를 사용하지 않고 그래프 그리기
 # estimator와 errorbar 파라미터는 Pandas나 NumPy 버전 업데이트에 따라 사용 방식이 변경되거나 Deprecated될 수 있다.
 # sns.barplot(x = 'menu_item', y = 'quantity', data=df, estimator=sum, errorbar=None)
-
-# 데이터 처리와 시각화를 명확히 분리하는 방식이 가장 좋은 방법이다.
-
 
 # # title(), xlabel(), ylabel()을 이용하여 그래프의 타이틀과 x,y축의 제목를 표기
 plt.title('Total Sales Quantity by Menu')
@@ -120,3 +141,16 @@ plt.xticks(rotation = 45)
 # 분석: day_of_week나 time_slot 별 total_price의 합계를 계산한다.
 # 시각화: 요일별/시간대별 막대 그래프 또는 선 그래프로 표현
 # 가설: 주말이 평일보다 판매량이 높을 것이다. / 점심시간과 오후 시간대가 피크일 것이다.
+
+# 요일별 판매액
+daily_sales = df.groupby('day_of_week')['total_price'].sum().reindex(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+# 위 코드를 sql으로 이해해보면 select sum(total_price) from df group by day_of_week 이다.
+# pandas의 reindex 메서드를 이용하여 요일 순서를 정렬한다.
+# 하지만 나의 데이터셋은 이미 요일이 정렬 되어있어 차이가 없지만 테스트 해보면 재정렬이 된다.
+# set_index라는 메서드도 있는데 이건 나중에 차차 알아보자
+plt.figure(figsize=(8, 5))
+sns.barplot(x=daily_sales.index, y=daily_sales.values)
+plt.title('Total Sales by Day')
+plt.xlabel('Day')
+plt.ylabel('Total Sales')
+plt.show()
