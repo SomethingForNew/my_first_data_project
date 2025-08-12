@@ -154,3 +154,13 @@ plt.title('Total Sales by Day')
 plt.xlabel('Day')
 plt.ylabel('Total Sales')
 plt.show()
+
+# 시간대별 판매량
+time_slot_sales = df.groupby('time_slot')['total_price'].sum().reindex(['morning', 'noon', 'afternoon', 'evening'])
+
+plt.figure(figsize=(8, 5))
+sns.barplot(x=time_slot_sales.index, y=time_slot_sales.values)
+plt.title('Total Sales by Time Slot')
+plt.xlabel('Time Slot')
+plt.ylabel('Total Sales')
+plt.show()
